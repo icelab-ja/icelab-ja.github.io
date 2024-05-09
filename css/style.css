@@ -445,6 +445,14 @@ a:focus {
   text-align: center;
 }
 
+.member-item a {
+  color: #111111;
+}
+
+.member-item a:hover {
+  color: #555555;
+}
+
 .member-item .email {
   font-size: 15px;
 }

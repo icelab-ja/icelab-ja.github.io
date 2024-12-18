@@ -1,7 +1,7 @@
 var expID="ExpNishi2";
 //var expTag="ExpNishi2";
 var expFolder="ExpNishi2_x1204529x";
-var headSentence="メロディー聴取実験";
+var headSentence="メロディー聴取実験テスト";
 var cur_lyrics_sentence=""
 
 var data_info = []

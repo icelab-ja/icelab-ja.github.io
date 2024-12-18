@@ -76,7 +76,7 @@ document.getElementById('sendButton').addEventListener('click', function(event){
 		xhr.open('POST', 'https://creevo-art.com/experiment/');
 		xhr.setRequestHeader( 'Content-Type', 'application/json' );
 		var data = {"expID":expID, "userXID":userXID, "varAge":varAge, "varListenTime":varListenTime, "varMusicActivity":varMusicActivity, "varHarmonyEducation":varHarmonyEducation, "curAID":curAID, "curBID":curBID, "chosenID":chosenID, "curRatingA":curRatingA, "curRatingB":curRatingB, };
-//		xhr.send( JSON.stringify(data) );
+		xhr.send( JSON.stringify(data) );
 
 //		if(workCounter>=20){
 //			document.getElementById("report_sentence").innerHTML="<a href=\"https://docs.google.com/forms/d/e/1FAIpQLSeRKAQ57Rzvb_HYrWNhrNmij_EpIm0gpdGksbhJG-GSDNqMRw/viewform?usp=pp_url&entry.1859172827="+userXID+"\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>作業報告をする</strong></a>";

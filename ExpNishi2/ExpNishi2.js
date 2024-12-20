@@ -173,15 +173,21 @@ function SetupTest(){
 
 	curAID=data_info[sampleIdx][0];
 	curBID=data_info[sampleIdx][1];
+
+//////////////////////////////////////
+	document.getElementById("label1").innerHTML=curAID;
+	document.getElementById("label2").innerHTML=curBID;
+//////////////////////////////////////
+
 	cur_lyrics_sentence = data_info[sampleIdx][2]
 	selected_sampleIdx.push(sampleIdx)
 
-//	document.getElementById("label1").innerHTML=curAID;
-//	document.getElementById("label2").innerHTML=curBID;
 //	console.log(selected_sampleIdx)
 
-	curMp3AURL='https://creevo-music.com/experiment/'+expFolder+'/'+curBID+'.mp3';
-	curMp3BURL='https://creevo-music.com/experiment/'+expFolder+'/'+curAID+'.mp3';
+	curMp3AURL='https://creevo-music.com/experiment/'+expFolder+'/'+curAID+'.mp3';
+	curMp3BURL='https://creevo-music.com/experiment/'+expFolder+'/'+curBID+'.mp3';
+//	curMp3AURL='./'+expFolder+'/'+curBID+'.mp3';
+//	curMp3BURL='./'+expFolder+'/'+curAID+'.mp3';
 
 	document.getElementById("Audio1A").src=curMp3AURL;
 	document.getElementById("Audio1B").src=curMp3BURL;

@@ -17,9 +17,6 @@ for(var i=0,len=tmp_content.length;i<len;i+=1){
 	instr_data_info.push(tmp_content[i].split('\t'))
 }//endfor i
 
-//console.log(vocal_data_info);
-//console.log(instr_data_info);
-
 function getRandomElements(arr, n) {
 	if (n > arr.length) {throw new Error("n cannot be larger than the array length");}
 	const shuffled = arr.slice().sort(() => 0.5 - Math.random());// 配列をシャッフル
@@ -32,8 +29,6 @@ var cand_idx_instr = []
 for(let i=0;i<instr_data_info.length;i++){cand_idx_instr.push(i);}
 var selected_sampleIdx_vocal = getRandomElements(cand_idx_vocal, 10)
 var selected_sampleIdx_instr = getRandomElements(cand_idx_instr, 10)
-//console.log(selected_sampleIdx_vocal);
-//console.log(selected_sampleIdx_instr);
 var n_pairs_tot = 2 * selected_sampleIdx_vocal.length
 
 document.getElementById("head_sentence").innerHTML="<font color=\"#ffffff\">"+headSentence+"</font>";
@@ -180,18 +175,6 @@ function SetupTest(){
 	document.getElementById("label1").innerHTML="Aの方が良い";
 	document.getElementById("label2").innerHTML="Bの方が良い";
 
-//	let sampleIdx=-1
-//	for(var i=0,len=100;i<len;i+=1){
-//		sampleIdx = Math.floor( Math.random() * data_info.length );
-//		for(var j=0,len=selected_sampleIdx.length;j<len;j+=1){
-//			if(sampleIdx==selected_sampleIdx[j]){sampleIdx=-1; break;}
-//		}//endfor j
-////		if(sampleIdx in selected_sampleIdx){sampleIdx=-1;}
-//		if(sampleIdx>=0){break;}
-//	}//endfor i
-
-//	console.log(workCounter,workCounter%2, Math.floor(workCounter/2))
-
 	if(workCounter%2==0){
 		if(Math.floor( Math.random() * 2 ) == 0){
 			curAID=instr_data_info[selected_sampleIdx_instr[Math.floor(workCounter/2)]][0];
@@ -213,8 +196,8 @@ function SetupTest(){
 	}//endif
 
 //////////////////////////////////////
-	document.getElementById("label1").innerHTML=curAID;
-	document.getElementById("label2").innerHTML=curBID;
+//	document.getElementById("label1").innerHTML=curAID;
+//	document.getElementById("label2").innerHTML=curBID;
 //////////////////////////////////////
 
 	curMp3AURL='https://creevo-music.com/experiment/'+expFolder+'/'+curAID+'.mp3';

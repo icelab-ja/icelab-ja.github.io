@@ -4,16 +4,37 @@ var expFolder="ExpNishi2_x1204529x";
 var headSentence="メロディー聴取実験テスト";
 var cur_lyrics_sentence=""
 
-var data_info = []
-var tmp_content=data_info_str.split('\n');
+var vocal_data_info = []
+var tmp_content=vocal_data_info_str.split('\n');
 for(var i=0,len=tmp_content.length;i<len;i+=1){
 	if(tmp_content[i]==""){continue;}
-	data_info.push(tmp_content[i].split('\t'))
+	vocal_data_info.push(tmp_content[i].split('\t'))
 }//endfor i
-//console.log(data_info_str);
-//console.log(data_info);
+var instr_data_info = []
+var tmp_content=instr_data_info_str.split('\n');
+for(var i=0,len=tmp_content.length;i<len;i+=1){
+	if(tmp_content[i]==""){continue;}
+	instr_data_info.push(tmp_content[i].split('\t'))
+}//endfor i
 
-var selected_sampleIdx = []
+//console.log(vocal_data_info);
+//console.log(instr_data_info);
+
+function getRandomElements(arr, n) {
+	if (n > arr.length) {throw new Error("n cannot be larger than the array length");}
+	const shuffled = arr.slice().sort(() => 0.5 - Math.random());// 配列をシャッフル
+	return shuffled.slice(0, n);// 最初のn個を返す
+}//
+
+var cand_idx_vocal = []
+for(let i=0;i<vocal_data_info.length;i++){cand_idx_vocal.push(i);}
+var cand_idx_instr = []
+for(let i=0;i<instr_data_info.length;i++){cand_idx_instr.push(i);}
+var selected_sampleIdx_vocal = getRandomElements(cand_idx_vocal, 10)
+var selected_sampleIdx_instr = getRandomElements(cand_idx_instr, 10)
+//console.log(selected_sampleIdx_vocal);
+//console.log(selected_sampleIdx_instr);
+var n_pairs_tot = 2 * selected_sampleIdx_vocal.length
 
 document.getElementById("head_sentence").innerHTML="<font color=\"#ffffff\">"+headSentence+"</font>";
 
@@ -21,7 +42,6 @@ var userXID="";
 for(let i=0;i<10;i++){userXID+=(Math.random()%100).toString(32).substring(2,4);}
 
 document.getElementById("representUserXID").innerHTML="セッションID: "+userXID;
-
 
 var workCounter=0;
 
@@ -63,8 +83,8 @@ var curBID="";
 document.getElementById('sendButton').addEventListener('click', function(event){
 
 	if(status=="inquiry"){
-//		console.log(varAge,varListenTime,varMusicActivity,varHarmonyEducation);
 
+//		console.log(varAge,varListenTime,varMusicActivity,varHarmonyEducation);
 		document.getElementById("questionnare").hidden = true;
 		status="selecting";
 		SetupTest();
@@ -78,12 +98,11 @@ document.getElementById('sendButton').addEventListener('click', function(event){
 		var data = {"expID":expID, "userXID":userXID, "varAge":varAge, "varListenTime":varListenTime, "varMusicActivity":varMusicActivity, "varHarmonyEducation":varHarmonyEducation, "curAID":curAID, "curBID":curBID, "chosenID":chosenID, "curRatingA":curRatingA, "curRatingB":curRatingB, };
 		xhr.send( JSON.stringify(data) );
 
-//		if(workCounter>=20){
-//			document.getElementById("report_sentence").innerHTML="<a href=\"https://docs.google.com/forms/d/e/1FAIpQLSeRKAQ57Rzvb_HYrWNhrNmij_EpIm0gpdGksbhJG-GSDNqMRw/viewform?usp=pp_url&entry.1859172827="+userXID+"\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>作業報告をする</strong></a>";
-//		}//endif
+		if(workCounter>=n_pairs_tot){
+			window.location.assign("https://icelab-ja.github.io/ExpNishi2/thankyou.html");
+		}//endif
 
 //		document.getElementById("exit_sentence").innerHTML="<a href=\"https://creevomusic.github.io/exp/thankyou.html\">今日の聴き比べはここまでにする</a>";
-		document.getElementById("exit_sentence").innerHTML="<a href=\"https://creevomusic.github.io/exp/thankyou.html\">今日の聴き比べはここまでにする</a>";
 
 		$('#boxA').removeClass("box-notclickable").addClass("box-clickable");
 		$('#boxB').removeClass("box-notclickable").addClass("box-clickable");
@@ -161,33 +180,47 @@ function SetupTest(){
 	document.getElementById("label1").innerHTML="Aの方が良い";
 	document.getElementById("label2").innerHTML="Bの方が良い";
 
-	let sampleIdx=-1
-	for(var i=0,len=100;i<len;i+=1){
-		sampleIdx = Math.floor( Math.random() * data_info.length );
-		for(var j=0,len=selected_sampleIdx.length;j<len;j+=1){
-			if(sampleIdx==selected_sampleIdx[j]){sampleIdx=-1; break;}
-		}//endfor j
-//		if(sampleIdx in selected_sampleIdx){sampleIdx=-1;}
-		if(sampleIdx>=0){break;}
-	}//endfor i
+//	let sampleIdx=-1
+//	for(var i=0,len=100;i<len;i+=1){
+//		sampleIdx = Math.floor( Math.random() * data_info.length );
+//		for(var j=0,len=selected_sampleIdx.length;j<len;j+=1){
+//			if(sampleIdx==selected_sampleIdx[j]){sampleIdx=-1; break;}
+//		}//endfor j
+////		if(sampleIdx in selected_sampleIdx){sampleIdx=-1;}
+//		if(sampleIdx>=0){break;}
+//	}//endfor i
 
-	curAID=data_info[sampleIdx][0];
-	curBID=data_info[sampleIdx][1];
+//	console.log(workCounter,workCounter%2, Math.floor(workCounter/2))
+
+	if(workCounter%2==0){
+		if(Math.floor( Math.random() * 2 ) == 0){
+			curAID=instr_data_info[selected_sampleIdx_instr[Math.floor(workCounter/2)]][0];
+			curBID=instr_data_info[selected_sampleIdx_instr[Math.floor(workCounter/2)]][1];
+		}else{
+			curAID=instr_data_info[selected_sampleIdx_instr[Math.floor(workCounter/2)]][1];
+			curBID=instr_data_info[selected_sampleIdx_instr[Math.floor(workCounter/2)]][0];
+		}//endif
+		cur_lyrics_sentence = "インスト"
+	}else{
+		if(Math.floor( Math.random() * 2 ) == 0){
+			curAID=vocal_data_info[selected_sampleIdx_vocal[Math.floor(workCounter/2)]][0];
+			curBID=vocal_data_info[selected_sampleIdx_vocal[Math.floor(workCounter/2)]][1];
+		}else{
+			curAID=vocal_data_info[selected_sampleIdx_vocal[Math.floor(workCounter/2)]][1];
+			curBID=vocal_data_info[selected_sampleIdx_vocal[Math.floor(workCounter/2)]][0];
+		}//endif
+		cur_lyrics_sentence = vocal_data_info[selected_sampleIdx_vocal[Math.floor(workCounter/2)]][2]
+	}//endif
 
 //////////////////////////////////////
 	document.getElementById("label1").innerHTML=curAID;
 	document.getElementById("label2").innerHTML=curBID;
 //////////////////////////////////////
 
-	cur_lyrics_sentence = data_info[sampleIdx][2]
-	selected_sampleIdx.push(sampleIdx)
-
-//	console.log(selected_sampleIdx)
-
 	curMp3AURL='https://creevo-music.com/experiment/'+expFolder+'/'+curAID+'.mp3';
 	curMp3BURL='https://creevo-music.com/experiment/'+expFolder+'/'+curBID+'.mp3';
-//	curMp3AURL='./'+expFolder+'/'+curBID+'.mp3';
-//	curMp3BURL='./'+expFolder+'/'+curAID+'.mp3';
+//	curMp3AURL='./'+expFolder+'/'+curAID+'.mp3';
+//	curMp3BURL='./'+expFolder+'/'+curBID+'.mp3';
 
 	document.getElementById("Audio1A").src=curMp3AURL;
 	document.getElementById("Audio1B").src=curMp3BURL;
@@ -196,8 +229,8 @@ function SetupTest(){
 	document.getElementById("lyrics_sentence").innerHTML=cur_lyrics_sentence;
 
 	workCounter+=1;
-//	document.getElementById("ShowWorkCounter").innerHTML=String(workCounter)+' 回目の聴き比べです（あと '+String(Math.max(0,21-workCounter))+' 回お願いします）';
-	document.getElementById("ShowWorkCounter").innerHTML=String(workCounter)+' 回目の聴き比べです';
+	document.getElementById("ShowWorkCounter").innerHTML=String(workCounter)+' 回目の聴き比べです（あと '+String(Math.max(0,n_pairs_tot+1-workCounter))+' 回お願いします）';
+//	document.getElementById("ShowWorkCounter").innerHTML=String(workCounter)+' 回目の聴き比べです';
 
 }//end SetupTest
 

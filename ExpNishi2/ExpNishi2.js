@@ -91,7 +91,7 @@ document.getElementById('sendButton').addEventListener('click', function(event){
 		xhr.open('POST', 'https://creevo-art.com/experiment/');
 		xhr.setRequestHeader( 'Content-Type', 'application/json' );
 		var data = {"expID":expID, "userXID":userXID, "varAge":varAge, "varListenTime":varListenTime, "varMusicActivity":varMusicActivity, "varHarmonyEducation":varHarmonyEducation, "curAID":curAID, "curBID":curBID, "chosenID":chosenID, "curRatingA":curRatingA, "curRatingB":curRatingB, };
-		xhr.send( JSON.stringify(data) );
+//		xhr.send( JSON.stringify(data) );
 
 		if(workCounter>=n_pairs_tot){
 			window.location.assign("https://icelab-ja.github.io/ExpNishi2/thankyou.html");

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<link rel="stylesheet" type="text/css" media="screen" href="https://creevomusic.github.io/exp/stylesheets/stylesheet.css">
+
+	<title>ExpNishi3</title>
+
+	<style>
+		ul.pub {line-height: 20px;}
+		ul.pub li {margin-bottom: 10px;}
+		ol.multi-column {float: left; width: 100%; line-height: 10px;}
+		ol.multi-column li {float: left; width: 50%; margin-bottom: 10px;}
+
+		.container {
+			display: flex;
+			justify-content: center;
+		}
+
+		.radiobutton {
+			display: none;
+		}
+		label {
+			background-color: transparent;
+			padding: 10px 40px;
+			border-radius: 5px;
+			cursor : pointer;
+		}
+
+		#sendButton {
+			display: none;
+			background-color: #1e83ff;
+			border-radius: 5px;
+			border: none;
+			outline: none;
+			font-size:15pt;
+			color: white;
+			cursor : pointer;
+		}
+
+		#labelSendButton {
+			background-color: #1e83ff;
+			border-radius: 5px;
+			border: none;
+			outline: none;
+			font-size:15pt;
+			color: white;
+			cursor : pointer;
+		}
+		#labelSendButton:hover {
+			background-color: #0f67d2;
+		}
+		input:disabled[type=button] + #labelSendButton {
+			background-color: rgba(20,20,20,0.1);
+			color: rgba(20,20,20,0.5);
+			cursor : default;
+		}
+
+		.radioQuestion {
+			display: none;
+		}
+		.labelQuestion {
+			background-color: #b2ceff;
+			padding: 10px 20px;
+			border-radius: 5px;
+		}
+		.radioQuestion:checked + .labelQuestion {
+			background-color: #ff9372;
+		}
+
+		.box-clickable {
+			cursor : pointer;
+		}
+		.box-notclickable {
+			cursor : default;
+		}
+
+		.rating{
+			color: #D2D2D2;
+			font-size: 18px;
+		}
+		
+		.star-color{
+			color: #F8C601;
+		}
+
+	</style>
+
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<div id="header_wrap" class="outer" style="text-align:center;">
+		<header class="inner">
+			<h3 id="head_sentence"><font color="#ffffff">メロディー聴取実験</font></h3>
+<!--			<h3 id="head_sentence"><font color="#ffffff">この実験は終了しており、もうデータを集めていません。</font></h3>
+			<h3 id="head_sentence"><font color="#ffffff">ご協力ありがとうございました。</font></h3>-->
+		</header>
+	</div>
+
+	<!-- MAIN CONTENT -->
+
+	<div id="main_content_wrap" class="outer">
+	<section id="main_content" class="inner">
+
+	<div style="margin-left:auto; margin-right:auto; width:95%; text-align:center; padding: 0px 20px 20px 20px;">
+
+		<h3 id="main_sentence"></h3>
+
+		<h4 id="main_sentence">はじめに、次の質問に答えてください</h4>
+		<div style="height:20px;"></div>
+		<h3 id="lyrics_sentence"></h3>
+
+		<div style="height:10px;"></div>
+
+		<div class="container" style="margin-left:auto; margin-right:auto; width:100%; text-align:center; padding: 0px 0px;">
+
+			<div id="boxAContainer" style="width:40%; text-align:center; justify-content: center;" hidden>
+				<div id="boxA" class="radiobox box-clickable" style="width:100%; background-color:#eeeeee; text-align:center; justify-content: center;">
+					<h2>A</h2>
+					<img id="faceA" src="" height="160" alt="Picture" style="background-color:#eeeeee;"/>
+					<div></div>
+					<input id="radio1" class="radiobutton" name="selector" type="radio" value="A"/>
+					<label id="label1" class="box-clickable" for="radio1">Aの方が良い</label>
+					<div style="height:10px;"></div>
+					<div><audio id="Audio1A" controls preload="metadata" src="">エラー</audio><br></div>
+					<div style="height:50px;"></div>
+				</div>
+
+<!--				<div style="height:40px;"></div>-->
+<!--				<div>
+					<div id="ratingBoxA" class="rating box-clickable" style="">
+						<span>
+							<i class="starA star-nocolor" id="starA01">★</i>
+							<i class="starA star-nocolor" id="starA02">★</i>
+							<i class="starA star-nocolor" id="starA03">★</i>
+							<i class="starA star-nocolor" id="starA04">★</i>
+							<i class="starA star-nocolor" id="starA05">★</i>
+							<i class="starA star-nocolor" id="starA06">★</i>
+							<i class="starA star-nocolor" id="starA07">★</i>
+							<i class="starA star-nocolor" id="starA08">★</i>
+							<i class="starA star-nocolor" id="starA09">★</i>
+							<i class="starA star-nocolor" id="starA10">★</i>
+						</span>
+					</div>
+					<div id="popup_descriptionA">曲を評価（任意）</div>
+				</div>-->
+
+				<div style="height:20px;"></div>
+			</div>
+
+			<div id="boxSpacer" style="width:5%;" hidden></div>
+
+			<div id="boxBContainer" style="width:40%; text-align:center; justify-content: center;" hidden>
+				<div id="boxB" class="radiobox box-clickable" style="width:100%; background-color:#eeeeee; text-align:center; justify-content: center;">
+					<h2>B</h2>
+					<img id="faceB" src="" height="160" alt="Picture" style="background-color:#eeeeee;"/>
+					<div></div>
+					<input id="radio2" class="radiobutton" name="selector" type="radio" value="B"/>
+					<label id="label2" class="box-clickable" for="radio2">Bの方が良い</label>
+					<div style="height:10px;"></div>
+					<div><audio id="Audio1B" controls preload="metadata" src="">エラー</audio><br></div>
+					<div style="height:50px;"></div>
+				</div>
+
+<!--				<div style="height:40px;"></div>-->
+<!--				<div>
+					<div id="ratingBoxB" class="rating box-clickable" style="">
+						<span>
+							<i class="starB star-nocolor" id="starB01">★</i>
+							<i class="starB star-nocolor" id="starB02">★</i>
+							<i class="starB star-nocolor" id="starB03">★</i>
+							<i class="starB star-nocolor" id="starB04">★</i>
+							<i class="starB star-nocolor" id="starB05">★</i>
+							<i class="starB star-nocolor" id="starB06">★</i>
+							<i class="starB star-nocolor" id="starB07">★</i>
+							<i class="starB star-nocolor" id="starB08">★</i>
+							<i class="starB star-nocolor" id="starB09">★</i>
+							<i class="starB star-nocolor" id="starB10">★</i>
+						</span>
+					</div>
+					<div id="popup_descriptionB">曲を評価（任意）</div>
+				</div>-->
+
+				<div style="height:20px;"></div>
+			</div>
+
+			<div id="questionnare">
+
+				<h4>あなたの年齢を教えてください</h4>
+				<input id="radioQAge1" class="radioQuestion" name="age" type="radio" value="0"/>
+				<label id="labelQAge1" class="labelQuestion" for="radioQAge1">10才未満</label>
+				<input id="radioQAge2" class="radioQuestion" name="age" type="radio" value="10"/>
+				<label id="labelQAge2" class="labelQuestion" for="radioQAge2">10代</label>
+				<input id="radioQAge3" class="radioQuestion" name="age" type="radio" value="20"/>
+				<label id="labelQAge3" class="labelQuestion" for="radioQAge3">20代</label>
+				<div style="height:25px;"></div>
+				<input id="radioQAge4" class="radioQuestion" name="age" type="radio" value="30"/>
+				<label id="labelQAge4" class="labelQuestion" for="radioQAge4">30代</label>
+				<input id="radioQAge5" class="radioQuestion" name="age" type="radio" value="40"/>
+				<label id="labelQAge5" class="labelQuestion" for="radioQAge5">40代</label>
+				<input id="radioQAge6" class="radioQuestion" name="age" type="radio" value="50"/>
+				<label id="labelQAge6" class="labelQuestion" for="radioQAge6">50代</label>
+				<input id="radioQAge7" class="radioQuestion" name="age" type="radio" value="60"/>
+				<label id="labelQAge7" class="labelQuestion" for="radioQAge7">60代</label>
+				<div style="height:25px;"></div>
+				<input id="radioQAge8" class="radioQuestion" name="age" type="radio" value="70"/>
+				<label id="labelQAge8" class="labelQuestion" for="radioQAge8">70代</label>
+				<input id="radioQAge9" class="radioQuestion" name="age" type="radio" value="80"/>
+				<label id="labelQAge9" class="labelQuestion" for="radioQAge9">80代</label>
+				<input id="radioQAge10" class="radioQuestion" name="age" type="radio" value="90"/>
+				<label id="labelQAge10" class="labelQuestion" for="radioQAge10">90代以上</label>
+
+				<div style="height:30px;"></div>
+
+				<h4>一日に平均どれくらい音楽を聴きますか？</h4>
+				<input id="radioQListenTime1" class="radioQuestion" name="listenTime" type="radio" value="0"/>
+				<label id="labelQListenTime1" class="labelQuestion" for="radioQListenTime1">30分間未満</label>
+				<input id="radioQListenTime2" class="radioQuestion" name="listenTime" type="radio" value="1"/>
+				<label id="labelQListenTime2" class="labelQuestion" for="radioQListenTime2">30分間から1時間</label>
+				<div style="height:25px;"></div>
+				<input id="radioQListenTime3" class="radioQuestion" name="listenTime" type="radio" value="2"/>
+				<label id="labelQListenTime3" class="labelQuestion" for="radioQListenTime3">1時間から3時間</label>
+				<input id="radioQListenTime4" class="radioQuestion" name="listenTime" type="radio" value="3"/>
+				<label id="labe4QListenTime1" class="labelQuestion" for="radioQListenTime4">3時間以上</label>
+
+				<div style="height:30px;"></div>
+
+				<h4>趣味や仕事で音楽の演奏・作曲はしますか？</h4>
+				<input id="radioQMusicActivity1" class="radioQuestion" name="musicActivity" type="radio" value="0"/>
+				<label id="labelQMusicActivity1" class="labelQuestion" for="radioQMusicActivity1">演奏も作曲もしない</label>
+				<input id="radioQMusicActivity2" class="radioQuestion" name="musicActivity" type="radio" value="1"/>
+				<label id="labelQMusicActivity2" class="labelQuestion" for="radioQMusicActivity2">演奏をする</label>
+				<div style="height:25px;"></div>
+				<input id="radioQMusicActivity3" class="radioQuestion" name="musicActivity" type="radio" value="2"/>
+				<label id="labelQMusicActivity3" class="labelQuestion" for="radioQMusicActivity3">作曲をする</label>
+				<input id="radioQMusicActivity4" class="radioQuestion" name="musicActivity" type="radio" value="3"/>
+				<label id="labelQMusicActivity4" class="labelQuestion" for="radioQMusicActivity4">演奏も作曲もする</label>
+
+				<div style="height:30px;"></div>
+
+				<h4>作曲理論（和声法）を授業などで学んだことはありますか？</h4>
+				<input id="radioQHarmonyEducation1" class="radioQuestion" name="harmonyEducation" type="radio" value="0"/>
+				<label id="labelQHarmonyEducation1" class="labelQuestion" for="radioQHarmonyEducation1">ない</label>
+				<input id="radioQHarmonyEducation2" class="radioQuestion" name="harmonyEducation" type="radio" value="1"/>
+				<label id="labelQHarmonyEducation2" class="labelQuestion" for="radioQHarmonyEducation2">ある</label>
+
+				<div style="height:20px;"></div>
+
+			</div>
+
+		</div>
+
+		<div style="height:30px;"></div>
+
+		<input id="sendButton" type="button" name="sendButton" value="聴き比べに進む" disabled/>
+		<label id="labelSendButton" for="sendButton">聴き比べに進む</label>
+
+		<div style="height:20px;"></div>
+
+		<div id="ShowWorkCounter"></div>
+		<div id="report_sentence"></div>
+		<div id="exit_sentence"></div>
+
+	</div>
+
+	<div style="height:20px;"></div>
+
+	<div id="memo" hidden></div>
+
+	</section>
+	</div>
+
+
+	<!-- FOOTER  -->
+	<div id="footer_wrap" class="outer">
+		<footer class="inner" style="text-align:center;">
+<!--		<a href="https://forms.gle/XWhMB8vZL3bcmB1v6" target="_blank">不具合を報告する</a>　　<span id="representUserXID"></span>-->
+		<span id="representUserXID"></span>
+		</footer>
+	</div>
+
+
+	<script src="https://creevomusic.github.io/exp/jquery.js"></script>
+	<script src="ExpNishi3_vocal_data_info.js"></script>
+	<script src="ExpNishi3_instr_data_info.js"></script>
+	<script src="ExpNishi3.js"></script>
+
+</body>
+
+</html>
+
+
+

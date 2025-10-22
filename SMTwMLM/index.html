@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Audio-to-Score Piano Transcription</title>
+    <title>Audio-to-MIDI Singing Transcription</title>
 
     <style>
       ul.pub {line-height: 20px;}
@@ -22,6 +22,331 @@
       }
       .example2 .this {background-color:#777;color:#fff;}
 
+    </style>
+
+    <script type="module">
+  import { Midi } from "https://cdn.skypack.dev/@tonejs/midi";
+  // import * as Tone from "https://cdn.skypack.dev/tone"; // 再生しないなら不要
+
+  // ===== ファイル設定 =====
+  const files = {
+        predUrl: "demo/UW52IJM7pr_trim_est_ipr.mid",    // 推定MIDI（既存）
+        gtUrl:   "demo/UW52IJM7pr_trim_tru_ipr.mid", // 正解MIDI（新規に配置）
+        offsetPred: 0, // 必要なら微調整
+        offsetGt:   0
+      };
+
+  // ===== 描画スタイル／寸法 =====
+  const cfg = {
+    pps: 100,               // pixel per second（横スケール）
+    noteH: 10,              // 1ノート高さ(px)
+    marginLeft: 56,         // 左余白（ピッチ軸）
+    marginTop: 24,          // 上余白（時間軸）
+    grid: "#e5e5e5",
+    gridMajor: "#cfcfcf",
+    axis: "#333",
+    font: "12px sans-serif",
+
+    // Pred（予測）は塗りつぶし
+    predFill: "rgba(30,144,255,0.55)", // DodgerBlue 半透明
+    predStroke: null,                   // 枠なし（必要なら色を入れる）
+
+    // GT（正解）は赤い枠のみ＋パディングで少し大きく
+    gtStroke: "#FF4961",   // 赤系（見やすい）
+    gtLineWidth: 2,        // 枠線を太めに
+    gtPadPx: 1.5           // 予測より “一回り大きく” 見せるパディング(px)
+  };
+
+  async function loadMidiNotes(url, offsetSec = 0) {
+    const res = await fetch(url);
+    const ab = await res.arrayBuffer();
+    const midi = new Midi(ab);
+
+    const notes = [];
+    let minPitch = 128, maxPitch = 0, maxTime = 0, minTime = Infinity;
+    midi.tracks.forEach((tr, ti) => {
+      tr.notes.forEach(n => {
+        const time = n.time + offsetSec;
+        const duration = Math.max(0, n.duration);
+        const end = time + duration;
+        notes.push({ midi: n.midi, time, duration, end, track: ti });
+        if (n.midi < minPitch) minPitch = n.midi;
+        if (n.midi > maxPitch) maxPitch = n.midi;
+        if (end > maxTime) maxTime = end;
+        if (time < minTime) minTime = time;
+      });
+    });
+    if (!isFinite(minTime)) minTime = 0;
+    return { notes, minPitch, maxPitch, maxTime, minTime };
+  }
+
+  function drawAxesAndGrid(ctx, rollW, rollH, duration, minPitch, maxPitch, rangeStart = 0, rangeEnd = null) {
+  const { pps, noteH, marginLeft, marginTop, grid, axis, font } = cfg;
+  if (!rangeEnd) rangeEnd = rangeStart + duration;
+
+  // 背景
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, marginLeft + rollW + 1, marginTop + rollH + 1);
+
+  ctx.save();
+  ctx.translate(marginLeft, marginTop);
+
+  // ===== 縦グリッド（2秒ごと）=====
+  ctx.strokeStyle = grid;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  for (let t = 0; t <= duration; t += 2) {
+    const x = t * pps;
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, rollH);
+  }
+  ctx.stroke();
+
+  // ===== 横グリッド（各音高）=====
+  ctx.strokeStyle = grid;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let m = maxPitch; m >= minPitch; m--) {
+    const y = (maxPitch - m) * noteH;
+    ctx.moveTo(0, y);
+    ctx.lineTo(rollW, y);
+  }
+  ctx.stroke();
+
+  ctx.restore();
+
+  // ===== 軸ラベル =====
+  ctx.font = font;
+  ctx.fillStyle = axis;
+  ctx.textBaseline = "top";
+
+  // 実際の時間に対応するラベル（例: 10〜20秒）
+  // → rangeStart〜rangeEndまでを2秒刻みで描画
+  for (let t = 0; t <= duration + 0.001; t += 2) {
+    const absTime = rangeStart + t;
+    const x = marginLeft + t * pps;
+    ctx.fillText(`${absTime}s`, x + 2, 4);
+  }
+  // 終端ラベルを明示的に追加（例: 20s）
+  const endX = marginLeft + duration * pps;
+  ctx.fillText(`${rangeEnd}s`, endX + 2, 4);
+
+  // ピッチ軸（オクターブごと）
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "right";
+  for (let m = maxPitch; m >= minPitch; m--) {
+    if (m % 12 === 0) {
+      const y = marginTop + (maxPitch - m) * noteH + noteH / 2;
+      ctx.fillText(`${m}`, marginLeft - 6, y);
+    }
+  }
+
+  // ===== 枠線（上下左右）=====
+  ctx.strokeStyle = axis;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+
+  // 左縦軸
+  ctx.moveTo(marginLeft, marginTop);
+  ctx.lineTo(marginLeft, marginTop + rollH);
+
+  // 上横軸
+  ctx.moveTo(marginLeft, marginTop);
+  ctx.lineTo(marginLeft + rollW, marginTop);
+
+  // 右縦軸（キャンバス内側に+marginLeftを考慮して確実に描画）
+  ctx.moveTo(marginLeft + rollW, marginTop);
+  ctx.lineTo(marginLeft + rollW, marginTop + rollH);
+
+  // 下横軸
+  ctx.moveTo(marginLeft, marginTop + rollH);
+  ctx.lineTo(marginLeft + rollW, marginTop + rollH);
+
+  ctx.stroke();
+}
+
+
+  // Pred：塗り矩形
+  function drawPredNotes(ctx, notes, minPitch, maxPitch) {
+    const { pps, noteH, marginLeft, marginTop, predFill, predStroke } = cfg;
+    ctx.save();
+    ctx.translate(marginLeft, marginTop);
+    ctx.fillStyle = predFill;
+    ctx.lineWidth = 1;
+    if (predStroke) ctx.strokeStyle = predStroke;
+
+    notes.forEach(n => {
+      const x = n.time * pps;
+      const y = (maxPitch - n.midi) * noteH + 1;
+      const w = Math.max(1, n.duration * pps);
+      const h = noteH - 2;
+      ctx.fillRect(x, y, w, h);
+      if (predStroke) ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    });
+    ctx.restore();
+  }
+
+  // GT：赤い枠のみ（Padで一回り拡大）
+  function drawGtOutlines(ctx, notes, minPitch, maxPitch) {
+    const { pps, noteH, marginLeft, marginTop, gtStroke, gtLineWidth, gtPadPx } = cfg;
+    ctx.save();
+    ctx.translate(marginLeft, marginTop);
+    ctx.strokeStyle = gtStroke;
+    ctx.lineWidth = gtLineWidth;
+
+    notes.forEach(n => {
+      const x = n.time * pps;
+      const y = (maxPitch - n.midi) * noteH + 1;
+      const w = Math.max(1, n.duration * pps);
+      const h = noteH - 2;
+
+      // 予測矩形より少し大きい赤枠
+      const rx = Math.max(0, x - gtPadPx);
+      const ry = Math.max(0, y - gtPadPx);
+      const rw = w + gtPadPx * 2;
+      const rh = h + gtPadPx * 2;
+
+      ctx.strokeRect(rx, ry, rw, rh);
+    });
+    ctx.restore();
+  }
+
+  async function loadAndDrawOverlay() {
+  const canvas = document.getElementById("pianoroll");
+  const scrollWrapper = document.querySelector(".scroll-wrapper");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+
+  const [pred, gt] = await Promise.all([
+    loadMidiNotes(files.predUrl, files.offsetPred),
+    loadMidiNotes(files.gtUrl, files.offsetGt)
+  ]);
+
+  // ===== 表示範囲 =====
+  const rangeStart = 75;
+  const rangeEnd   = 84;
+  const duration   = rangeEnd - rangeStart;
+
+  // ===== ノート切り取り =====
+  function cropNotes(notes) {
+    return notes
+      .filter(n => n.end > rangeStart && n.time < rangeEnd)
+      .map(n => {
+        const start = Math.max(n.time, rangeStart);
+        const end = Math.min(n.end, rangeEnd);
+        return {
+          ...n,
+          time: start - rangeStart,
+          duration: end - start,
+          end: end - rangeStart
+        };
+      })
+      .filter(n => n.duration > 0);
+  }
+
+  const predNotes = cropNotes(pred.notes);
+  const gtNotes   = cropNotes(gt.notes);
+
+  // ===== ピッチ範囲 =====
+  let minPitch = Math.min(pred.minPitch, gt.minPitch);
+  let maxPitch = Math.max(pred.maxPitch, gt.maxPitch);
+  const rollW = Math.ceil(duration * cfg.pps);
+  const rollH = (maxPitch - minPitch + 1) * cfg.noteH;
+
+  // ===== スクロール有無を自動制御 =====
+  const showScroll = duration > 10; // ← 10秒より長い場合のみスクロール
+  if (scrollWrapper) {
+    scrollWrapper.style.overflowX = showScroll ? "auto" : "hidden";
+  }
+
+  // ===== キャンバス幅の調整 =====
+  const displayWidth = showScroll
+    ? cfg.marginLeft + rollW                   // 通常（長い範囲）
+    : Math.max(700, cfg.marginLeft + rollW);   // 10秒以下なら最低700pxで拡大表示
+
+  // DPI対応
+  canvas.width  = Math.ceil(displayWidth * dpr);
+  canvas.height = Math.ceil((cfg.marginTop + rollH) * dpr);
+  canvas.style.width  = `${displayWidth}px`;
+  canvas.style.height = `${cfg.marginTop + rollH}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // ===== 描画 =====
+  drawAxesAndGrid(ctx, rollW, rollH, duration, minPitch, maxPitch, rangeStart + 55, rangeEnd + 55);
+  drawPredNotes(ctx, predNotes, minPitch, maxPitch);
+  drawGtOutlines(ctx, gtNotes, minPitch, maxPitch);
+
+  // === 凡例 ===
+  ctx.font = cfg.font;
+  ctx.textBaseline = "alphabetic"; // ← top から変更
+  ctx.fillStyle = "#000";
+
+  const legendBoxSize = 14;
+  const legendSpacingY = 26;
+
+  // 右上に配置（現在の位置を維持）
+  const legendX = cfg.marginLeft + rollW - 160;
+  const legendY = cfg.marginTop + 10;
+
+  // GT（赤枠）
+  ctx.strokeStyle = cfg.gtStroke;
+  ctx.lineWidth = cfg.gtLineWidth;
+  // ctx.strokeRect(legendX, legendY, legendBoxSize, legendBoxSize);
+  ctx.fillText("Ground Truth (red outline)", legendX + legendBoxSize + 8, legendY + legendBoxSize - 2);
+
+  // Pred（青塗り）
+  ctx.fillStyle = cfg.predFill;
+  ctx.fillStyle = "#000";
+  ctx.fillText("Prediction (blue filled)", legendX + legendBoxSize + 8, legendY + legendSpacingY + legendBoxSize - 2);
+}
+
+
+
+  loadAndDrawOverlay();
+</script>
+    <style>
+      canvas {
+      border: 1px solid #ccc;
+      display: block;
+      overflow-x: auto;
+      }
+      .yt-embed {
+        max-width: 800px;     /* ← 横幅を拡大（必要に応じて 1400 などに） */
+        margin: 0 auto 16px;   /* 中央寄せ + 下マージン */
+      }
+      .yt-embed iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;  /* 高さを自動算出。音だけ風にしたい時は height 指定に切替 */
+        height: auto;
+        border: 0;
+      }
+
+      /* モバイル縮小時の最適化 */
+      @media (max-width: 900px) {
+        .yt-embed { max-width: 100%; }
+      }
+      .scroll-wrapper {
+      overflow-x: auto;
+      width: 100%;
+      }
+      .demo-flex {
+        display: grid;
+        grid-template-columns: 360px 1fr; /* 左幅を調整 */
+        gap: 16px;
+        align-items: start;
+      }
+      .demo-flex .yt-col iframe {
+        width: 100%;
+        height: 200px; /* 音だけに近づけたいなら 80px に */
+        border: 0;
+      }
+      .demo-flex .roll-col .scroll-wrapper { /* 既存の横スクロールを尊重 */
+        overflow-x: auto;
+      }
+      @media (max-width: 900px) {
+        .demo-flex { grid-template-columns: 1fr; } /* モバイルでは縦並びに */
+        .demo-flex .yt-col iframe { height: 180px; }
+      }
     </style>
 
 
@@ -52,6 +377,46 @@ Proc. APSIPA ASC, to be presented, 2025.
 
       <div style="height:20px;"></div>
 
+      <div style="margin: auto; text-align: center;">
+        <h4>Abstract of the research</h4>
+      </div>
+      <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+        This study investigates the use of music language models (LMs) in singing MIDI transcription, the task of estimating the pitch, onset time, and offset time of each note in the vocal part from a musical audio signal. While recent studies have investigated acoustic models that predict pitch frame by frame using deep neural networks (DNNs), transcription errors remain due to large pitch fluctuations and ambiguous note boundaries in singing. To address this issue, we formulate Markov- and DNN-based LMs that estimate pitch probabilities at the note level, and integrate them with a DNN-based acoustic model using two methods: generative modeling and the sequential transducer. Experimental results show that both integration methods significantly improve transcription accuracy over a baseline acoustic model. Moreover, different strengths and characteristics of the compared LMs and integration methods are discussed.
+      </div>
+
+      <div style="height:20px;"></div>
+
+      <h4>Example of automatically transcribed MIDI</h4>
+
+      <!-- <h2>MIDI Piano Roll Viewer</h2> -->
+      <div class="yt-embed">
+        <iframe
+          src="https://www.youtube.com/embed/PbXL6dzZ6B8?start=130&rel=0&modestbranding=1"
+          title="Source audio"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="scroll-wrapper">
+        <canvas id="pianoroll"></canvas>
+      </div>
+      <!-- <div class="demo-flex">
+        <div class="yt-col">
+          <iframe
+            src="https://www.youtube.com/embed/【動画ID】?start=30&rel=0&modestbranding=1"
+            title="Source audio"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="roll-col">
+          <div class="scroll-wrapper">
+            <canvas id="pianoroll"></canvas>
+          </div>
+        </div>
+      </div> -->
+
         <h3>Contact</h3>
 
 For any inquiries please contact <a href="https://ice.inf.kyushu-u.ac.jp/member_en.html"><strong><font color="#00205B">Yu Sugimoto</font></strong></a> sugimoto.yu.681[at]s.kyushu-u.ac.jp<br>
@@ -62,7 +427,7 @@ For any inquiries please contact <a href="https://ice.inf.kyushu-u.ac.jp/member_
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-          Maintained by <a href="https://ice.inf.kyushu-u.ac.jp/index_en.html"><strong><font color="#00205B">ICE Lab</font></strong></a>　(Last updated: Aug 2025)
+          Maintained by <a href="https://ice.inf.kyushu-u.ac.jp/index_en.html"><strong><font color="#00205B">ICE Lab</font></strong></a> (Last updated: Oct 2025)
       </footer>
     </div>
 
@@ -71,6 +436,3 @@ For any inquiries please contact <a href="https://ice.inf.kyushu-u.ac.jp/member_
 <div id="fb-root"></div>
 
 </html>
-
-
-

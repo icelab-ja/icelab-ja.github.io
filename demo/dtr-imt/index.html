@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Dual-Time Representation Framework for Interactive Music Transcription</title>
+
+    <style>
+      ul.pub {line-height: 20px;}
+      ul.pub li {margin-bottom: 10px;}
+      ol.multi-column {float: left; width: 100%; line-height: 10px;}
+      ol.multi-column li {float: left; width: 50%; margin-bottom: 10px;}
+
+      .example2 li {
+      display: inline;
+      padding:10px 15px;
+      border:1px #ccc solid;color:#000053;
+      border-radius: 5px / 5px;
+      }
+      .example2 .this {background-color:#777;color:#fff;}
+    </style>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer"
+      style="height: 110px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <header class="inner" style="padding: 0;">
+        <h1 style="margin: 0; display: inline-block; white-space: nowrap; font-size: 30px; line-height: 1.2;">
+          <font color="#ffffff">Dual-Time Representation Framework for Interactive Music Transcription</font>
+        </h1>
+      </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        This is an accompanying webpage for the submitted paper.
+        <div style="height:20px;"></div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <strong><font color="#00205B">Dual-Time Representation Framework for Interactive Music Transcription</font></strong><br>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h4>Abstract</h4>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          We present a framework for interactive music transcription (IMT) that enables users to efficiently correct outputs of automatic music transcription (AMT) methods. While existing IMT systems typically use physical time (PT) representations (measured in seconds), which can precisely describe note timings, metrical time (MT) representations (measured in fractions of a beat) are more suitable for score typesetting and can reduce the user’s cognitive cost in understanding musical structure. To enable corrections in MT-based note sequences (MTNSs) derived from PT-based note sequences (PTNSs) produced by AMT methods, and to support coherent and flexible operations across both time domains, we propose data structures consisting of beat annotations, a MTNS, and a PTNS. Moreover, to facilitate user interaction, we develop three core processing methods: rhythm quantization (PTNS to MTNS), onset/offset time alignment (MTNS to PTNS), and candidate generation for note corrections. These methods are formulated within a unified generative model that incorporates statistical knowledge of musical scores and performances. Taking singing transcription as a concrete example, we implemented an IMT system based on the proposed framework, and experimental results demonstrated its potential in improving the human correction process.
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h4>Demo Video</h4>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <video controls width="680" style="max-width:100%;">
+            <source src="demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h4>Download the System</h4>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <p style="margin-top:0;">
+            The compiled transcription correction system and example data are available as a ZIP file via Google Drive.
+          </p>
+          <a href="https://drive.google.com/file/d/1teQSoWDgjj0v324TUnlNI7WmBGH39juV/view?usp=drive_link"
+             target="_blank" rel="noopener noreferrer"
+             style="display:inline-block;padding:10px 18px;border:1px solid #00205B;border-radius:5px;background-color:#00205B;color:#ffffff;text-decoration:none;font-weight:bold;">
+            Download ZIP file from Google Drive
+          </a>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h4>Source Code</h4>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <p style="margin-top:0;">
+            The source code will be available upon acceptance of the paper.
+          </p>
+          <!-- <a href="https://drive.google.com/file/d/1teQSoWDgjj0v324TUnlNI7WmBGH39juV/view?usp=drive_link"
+             target="_blank" rel="noopener noreferrer"
+             style="display:inline-block;padding:10px 18px;border:1px solid #00205B;border-radius:5px;background-color:#00205B;color:#ffffff;text-decoration:none;font-weight:bold;">
+            Download ZIP file from Google Drive
+          </a> -->
+        </div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+      </footer>
+    </div>
+    <div id="fb-root"></div>
+  </body>
+</html>

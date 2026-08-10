@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>MIDI Transcription and Loudness Estimation from Clarinet Recordings Using Contact Microphones</title>
+
+    <style>
+      ul.pub {line-height: 20px;}
+      ul.pub li {margin-bottom: 10px;}
+      ol.multi-column {float: left; width: 100%; line-height: 10px;}
+      ol.multi-column li {float: left; width: 50%; margin-bottom: 10px;}
+
+      .example2 li {
+      display: inline;
+      padding:10px 15px;
+      border:1px #ccc solid;color:#000053;
+      border-radius: 5px / 5px;
+      }
+      .example2 .this {background-color:#777;color:#fff;}
+
+      .example-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      }
+      .example-notes {
+      width: 90px;
+      flex: 0 0 90px;
+      text-align: center;
+      }
+      .example-note {
+      font-size: 14px;
+      line-height: 1.4;
+      }
+      .note-1 {margin-top: 80px;}
+      .note-2 {margin-top: 110px;}
+      .note-3 {margin-top: 100px;}
+      .example-scroll {
+      overflow-x: auto;
+      width: 100%;
+      }
+      .example-scroll img {
+      height: 400px;
+      width: auto;
+      max-width: none;
+      }
+      td {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header_wrap" class="outer"
+      style="height: 110px; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <header class="inner" style="padding: 0;">
+        <!-- <h1 style="margin: 0; display: inline-block; white-space: nowrap; font-size: 30px; line-height: 1.2;"> -->
+        <h1 style="margin: 0; display: inline-block; font-size: 30px; line-height: 1.2;">
+          <font color="#ffffff">MIDI Transcription and Loudness Estimation <br>from Clarinet Recordings Using Contact Microphones</font>
+        </h1>
+      </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        This is an accompanying webpage for the submitted paper.
+        <div style="height:20px;"></div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <strong><font color="#00205B">MIDI Transcription and Loudness Estimation <br>from Clarinet Recordings Using Contact Microphones</font></strong><br>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h3>Abstract</h3>
+        </div>
+
+        <div style="margin:auto;padding:10px;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <p>
+            We present a method for analyzing individual clarinet performances in a wind ensemble using contact microphones. The goal is to precisely quantify performance features (e.g.\ pitch, onset/offset time, and loudness) from individual players' recordings, for practice support. While previous studies have used highly directional microphones to reduce sound contamination, this approach is less effective when players are distributed in two dimensions. As an alternative, we use contact microphones, which significantly reduce interference from other players, with drawbacks that they capture noise from key movements and exhibit acoustic characteristics that differ from those of perceived sounds. To estimate performance features from contact-microphone recordings using deep neural networks, we collect synchronized recordings from both contact and condenser microphones and propose training methods that do not require manually annotated data. Experiments show that the proposed methods achieve high accuracy in transcribing note timing and pitch, as well as in estimating loudness. We also demonstrate their potential for analyzing clarinet unison performances. The method is applicable to a wide variety of musical instruments.
+          </p>
+        </div>
+
+        <div style="margin: auto; text-align: center;">
+          <h3>Example Outputs of MIDI Transcription</h3>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">CREPE Notes</div>
+              <div class="example-note note-2">M0 adapt</div>
+              <div class="example-note note-3">GT</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/004_8_3_tuner_est_ipr_full_all.png" alt="MIDI transcription example 1">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_8_3_tuner.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_8_3_pin.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">CREPE Notes</div>
+              <div class="example-note note-2">M0 adapt</div>
+              <div class="example-note note-3">GT</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/012_10_1_ipr_full_all.png" alt="MIDI transcription example 2">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/012_10_1_tuner.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/012_10_1_pin.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">CREPE Notes</div>
+              <div class="example-note note-2">M0 adapt</div>
+              <div class="example-note note-3">GT</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/006_5_1_ipr_full_all.png" alt="MIDI transcription example 3">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/006_5_1_tuner.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/006_5_1_pin.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        
+
+        <!-- <div style="text-align:center;">
+          <audio controls>
+            <source src="audio/004_8_3_tuner.mpeg" type="audio/mpeg">
+            お使いのブラウザはaudioタグに対応していません。
+          </audio>
+        </div> -->
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h3>Example Outputs of Loudness Estimation</h3>
+          <p style="margin-top: 10px; font-size: 14px; color: #555;">
+            Red indicates the PM recording, green the baseline, blue the CRNN estimation, and black the ground truth (GT).
+          </p>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">Piano Roll</div>
+              <div class="example-note note-2">Loudness [dB]</div>
+              <div class="example-note note-3">Error [dB]</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/017_practice_4_4_full.png" alt="MIDI transcription example 3">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/017_practice_4_4_tuner_trimmed.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/017_practice_4_4_pin_trimmed.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">Piano Roll</div>
+              <div class="example-note note-2">Loudness [dB]</div>
+              <div class="example-note note-3">Error [dB]</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/004_6_1_full.png" alt="MIDI transcription example 3">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_6_1_tuner.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_6_1_pin.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:center;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <div class="example-row">
+            <div class="example-notes">
+              <div class="example-note note-1">Piano Roll</div>
+              <div class="example-note note-2">Loudness [dB]</div>
+              <div class="example-note note-3">Error [dB]</div>
+            </div>
+            <div class="example-scroll">
+              <img src="img/004_9_2_full.png" alt="MIDI transcription example 3">
+            </div>
+          </div>
+
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Contact Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_9_2_tuner.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+              <tr>
+                <td>Condenser Mic</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/004_9_2_pin.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        
+
+        <div style="height:20px;"></div>
+
+        <div style="margin: auto; text-align: center;">
+          <h3>Analysis of Unison Performances</h3>
+        </div>
+
+        <div style="margin:auto;padding:10px;text-align:left;border: 1px solid rgb(0,0,0); width:700px;background-color:rgba(100,100,100,0.1);">
+          <!-- <div class="example-row"> -->
+            <div class="example-notes">
+              <!-- <div class="example-note note-1">Piano Roll</div>
+              <div class="example-note note-2">Loudness [dB]</div>
+              <div class="example-note note-3">Difference [dB]</div> -->
+            </div>
+            <div class="example-scroll">
+              <img src="img/20251011_piece1_ensemble_take1_all_diff_18s_24s.png" alt="MIDI transcription example 3" style="display: block; margin: auto;">
+            </div>
+          <!-- </div> -->
+          <p>
+            This figure presents an example of the visualized note-level features for a clarinet unison ensemble, assigning distinct colors to each player.
+Vertical lines indicate onset and offset times, while horizontal lines indicate note-level F0 and loudness in the upper and lower sections, along with their continuous curves.
+The results highlight timing and pitch deviations during a rhythmic phrase (18--20 s), where rhythmic instability is observed because the leading performer varies for each note within the passage, and a consistent pitch bias is evident, with player 1 tending to play in lower intonation and player 3 tending to play in higher intonation. 
+In the 20--24 s segment, inconsistent dynamic control can be observed, player 3 correctly exhibits a V-shaped loudness contour (a decrescendo followed by a crescendo, following score indications), but players 1 and 2 incorrectly perform a continuous decrescendo. 
+          </p>
+          <table style="margin: 10px auto 0; width: 100%; max-width: 600px;">
+            <tbody>
+              <tr>
+                <td>Condenser Mic (Mixture)</td>
+                <td>
+                  <audio controls>
+                    <source src="audio/20251011_piece1_ensemble_take1_cond_trimmed.mp3" type="audio/mpeg">
+                    お使いのブラウザはaudioタグに対応していません。
+                  </audio>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+      </footer>
+    </div>
+    <div id="fb-root"></div>
+  </body>
+</html>
+
